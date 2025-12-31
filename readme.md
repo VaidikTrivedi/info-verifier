@@ -35,6 +35,30 @@
 
 ---
 
+## The "Deep Research Tribunal" Architecture
+We moved beyond simple "prompting" and use a Stateful Multi-Agent Workflow (using LangGraph). This minimizes hallucinations by forcing the model to show its work at every step.
+
+**The Agents (The Cast):**
+1. *The Prosecutor (Decomposer):* Breaks the news article into atomic, verifiable claims (e.g., "Inflation rose by 5%" is a claim; "The president is angry" is an opinion).
+
+2. *The Investigator (Researcher):* Generates search queries for each atomic claim and fetches raw HTML/Text from trusted sources (Reuters, AP, Nature, etc.).
+
+3. *The Cross-Examiner (Verifier):* Reads the retrieved evidence and compares it strictly against the claim. It spots logical fallacies or data mismatches.
+
+4. *The Judge (Adjudicator):* Compiles the final verdict, assigns a "Truth Score," and cites sources.
+
+**High-Court Tribunal** model:
+
+1. **Layer 1:** The Defender (Fast Check): Semantic caching. Has this been verified before?
+
+2. **Layer 2:** The Prosecutor (Fact Extraction): An LLM breaks the claim into atomic facts (e.g., "The sky is green" -> [Entity: Sky, Attribute: Green]).
+
+3. **Layer 3:** The Jury (Evidence Retrieval): Agents fetch external evidence (Search API or Vector DB).
+
+4. **Layer 4:** The Judge (Adjudication): A stronger model (e.g., GPT-4o or Claude 3.5 Sonnet) compares the atomic facts against the evidence and assigns a Truth Score (0.0 to 1.0).
+
+---
+
 ## Setup Instructions
 
 ### 1. Clone the Repository
